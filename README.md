@@ -1,2 +1,2 @@
 # HeatMatch
-Segmentation-Free Heatmapping and Analysis of Very Dense Saccade Patterns
+HeatMatch: Orientation-Aware Visualization and Comparison of Very Dense Saccade Patterns
