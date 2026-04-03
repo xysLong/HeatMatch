@@ -2,17 +2,17 @@ import numpy as np
 from dataclasses import dataclass
 
 """
-## Field Computation
+Field Computation
 
 Implements the core equations from §3.1 of the paper:
 
-- **Orientation** — unsigned saccade orientation ω_j ∈ [0, π).
-- **Point–Saccade Distance** — §3.1.1, Eq. (1): minimal Euclidean distance from a
+- Orientation — unsigned saccade orientation ω_j ∈ [0, π).
+- Point-Saccade Distance — §3.1.1, Eq. (1): minimal Euclidean distance from a
   reference point p_i to a saccade segment s_j.
-- **Gaussian Kernel** — §3.1.2, Eq. (2): kernel K(p_i, s_j) and kernel mass m_i.
-- **Mean Orientation and Coherence** — §3.1.3, Eq. (3): weighted mean orientation ω̄_i
+- Gaussian Kernel — §3.1.2, Eq. (2): kernel K(p_i, s_j) and kernel mass m_i.
+- Mean Orientation and Coherence — §3.1.3, Eq. (3): weighted mean orientation ω̄_i
   and mean resultant length R_i via double-angle embedding.
-- **Density** — §3.1.4, Eq. (4): normalized kernel mass ρ_i.
+- Density — §3.1.4, Eq. (4): normalized kernel mass ρ_i.
 
 Public API : make_reference_grid, make_orientation_field, OrientationField
 Internal   : _compute_orientations, _point_to_segment_distances, _gaussian_kernel
@@ -86,22 +86,30 @@ def _gaussian_kernel(d, sigma):
 
 
 
-def make_reference_grid(w, h, nx, ny):
+def make_reference_grid(w, h, grid_resolution=200):
     """
-    Uniform N×N grid of reference positions {p_i} ⊂ [1..W] × [1..H] — §3.1.
+    Uniform reference grid of positions {p_i} ⊂ [1..W] × [1..H] — §3.1.
 
     Parameters
     ----------
-    w, h  : stimulus width and height in pixels
-    nx    : number of grid columns
-    ny    : number of grid rows
+    w, h             : stimulus width and height in pixels
+    grid_resolution  : int or (ny, nx) tuple
+                       Number of grid points along each axis. A single integer
+                       produces a square grid; a tuple sets rows and columns
+                       independently. Follows numpy's (rows, cols) = (ny, nx)
+                       convention, matching the shape of the returned YY array.
+                       Default: 200 (i.e. 200×200 = 40 000 points).
 
     Returns
     -------
-    pts : (nx*ny, 2) array — flattened (x, y) positions, input to make_orientation_field
+    pts : (ny*nx, 2) array — flattened (x, y) positions, input to make_orientation_field
     XX  : (ny, nx) meshgrid of x-coordinates (use for reshaping field outputs)
     YY  : (ny, nx) meshgrid of y-coordinates (use for reshaping field outputs)
     """
+    if isinstance(grid_resolution, int):
+        ny = nx = grid_resolution
+    else:
+        ny, nx = grid_resolution
     xs = np.linspace(1, w, nx, dtype=np.float64)
     ys = np.linspace(1, h, ny, dtype=np.float64)
     xx, yy = np.meshgrid(xs, ys)

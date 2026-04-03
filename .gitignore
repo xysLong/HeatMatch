@@ -209,6 +209,9 @@ __marimo__/
 # Dataset (download from https://osf.io/f2xhj/)
 *.csv
 
+# Stimulus images (public domain via Wikimedia Commons, see paper for details)
+assets/IMG_*.png
+
 # macOS metadata
 .DS_Store
 
