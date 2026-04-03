@@ -8,7 +8,7 @@ import math
 """
 Visualization
 
-Implements the OOI-coded heatmap pipeline from §3.2 of the paper.
+Implements the OOI-coded heatmap rendering pipeline.
 
 Public API : Heatmap
 Internal   : _make_cyclic_colormap, _opacity_from_confidence, _load_grayscale
@@ -17,7 +17,7 @@ Internal   : _make_cyclic_colormap, _opacity_from_confidence, _load_grayscale
 
 def _make_cyclic_colormap(base_cmap):
     """
-    Cyclic diverging colormap for unsigned orientation display — §3.2.
+    Cyclic diverging colormap for unsigned orientation display.
 
     Concatenates the forward and reverse passes of a diverging colormap so that
     ω = 0 and ω = π map to the same color, creating a seamless cycle over [0, π).
@@ -32,7 +32,7 @@ def _make_cyclic_colormap(base_cmap):
 
 def _opacity_from_confidence(confidence, degree=2.0, quantile=0.8, eps=1e-12):
     """
-    "Gentle nonlinearity" (§3.2) mapping a confidence signal to opacity ∈ [0, 1].
+    "Gentle nonlinearity" mapping a confidence signal to opacity ∈ [0, 1].
 
     Uses a logistic function centered at the quantile-th percentile so that
     low-confidence grid points fade toward transparency.
@@ -59,7 +59,7 @@ def _load_grayscale(path):
 
 class Heatmap:
     """
-    OOI-coded heatmap renderer with two-level caching — §3.2.
+    OOI-coded heatmap renderer with two-level caching.
 
     Wraps an OrientationField and caches intermediate results to avoid redundant
     computation when only display parameters change:
@@ -96,7 +96,7 @@ class Heatmap:
     def draw(self, ax, ooi=0.0, opacity_density_weight=1.0, base_opacity=0.85,
              cmap='coolwarm', degree=2.0, quantile=0.8):
         """
-        Render the OOI-coded saccade heatmap onto a matplotlib Axes — §3.2.
+        Render the OOI-coded saccade heatmap onto a matplotlib Axes.
 
         Hue encodes mean orientation ω̄_i relative to the chosen OOI.
         Opacity encodes local confidence ρ^opacity_density_weight · R^(1−opacity_density_weight),

@@ -77,14 +77,14 @@ A full worked example is in [`demo.ipynb`](demo.ipynb). The dataset is not inclu
 | | |
 |---|---|
 | `make_reference_grid(w, h, grid_resolution)` | Returns `(pts, xx, yy)`; int → square grid, `(ny, nx)` tuple → rectangular |
-| `make_orientation_field(pts, onset, offset, sigma, grid_shape, ...)` | Returns `OrientationField` with `omega_mean`, `R`, `rho` — Eqs. (2)–(4) |
+| `make_orientation_field(pts, onset, offset, sigma, grid_shape, ...)` | Returns `OrientationField` with `omega_mean`, `R`, `rho` |
 
 ### `heatmatch.heatmapping`
 
 | | |
 |---|---|
 | `Heatmap(field, w, h, image=None)` | Caches colormap, opacity, and (optionally) grayscale background image |
-| `Heatmap.draw(ax, ooi, opacity_density_weight, base_opacity, cmap, ...)` | Renders onto `ax` — §3.2 |
+| `Heatmap.draw(ax, ooi, opacity_density_weight, base_opacity, cmap, ...)` | Renders onto `ax` |
 
 OOI in degrees: 0 = east, 90 = north, 180 = west, 270 = south. Unsigned, so `ooi` and `ooi ± 180` are equivalent.
 
@@ -92,7 +92,7 @@ OOI in degrees: 0 = east, 90 = north, 180 = west, 270 = south. Unsigned, so `ooi
 
 | | |
 |---|---|
-| `compute_similarity(field_a, field_b, density_coherence_tradeoff)` | Returns `SimilarityResult(s_loc, s_dir)` — Eqs. (5)–(6) |
+| `compute_similarity(field_a, field_b, density_coherence_tradeoff)` | Returns `SimilarityResult(s_loc, s_dir)` |
 
 ---
 
