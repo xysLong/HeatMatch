@@ -4,15 +4,15 @@ from dataclasses import dataclass
 """
 Field Computation
 
-Implements the core equations from §3.1 of the paper:
+Computes orientation fields over a reference grid from saccade data.
 
 - Orientation — unsigned saccade orientation ω_j ∈ [0, π).
-- Point-Saccade Distance — §3.1.1, Eq. (1): minimal Euclidean distance from a
-  reference point p_i to a saccade segment s_j.
-- Gaussian Kernel — §3.1.2, Eq. (2): kernel K(p_i, s_j) and kernel mass m_i.
-- Mean Orientation and Coherence — §3.1.3, Eq. (3): weighted mean orientation ω̄_i
-  and mean resultant length R_i via double-angle embedding.
-- Density — §3.1.4, Eq. (4): normalized kernel mass ρ_i.
+- Point-Saccade Distance — minimal Euclidean distance from a reference point p_i
+  to a saccade segment s_j.
+- Gaussian Kernel — kernel K(p_i, s_j) and kernel mass m_i.
+- Mean Orientation and Coherence — weighted mean orientation ω̄_i and mean
+  resultant length R_i via double-angle embedding.
+- Density — normalized kernel mass ρ_i.
 
 Public API : make_reference_grid, make_orientation_field, OrientationField
 Internal   : _compute_orientations, _point_to_segment_distances, _gaussian_kernel
@@ -22,7 +22,7 @@ Internal   : _compute_orientations, _point_to_segment_distances, _gaussian_kerne
 @dataclass
 class OrientationField:
     """
-    Precomputed orientation field over a reference grid — §3.1.
+    Precomputed orientation field over a reference grid.
 
     Holds the three per-point statistics returned by make_orientation_field
     together with the grid shape so that callers need not carry it separately.
@@ -42,7 +42,7 @@ class OrientationField:
 
 def _compute_orientations(onset, offset):
     """
-    Unsigned saccade orientations ω_j ∈ [0, π) — §3.1.
+    Unsigned saccade orientations ω_j ∈ [0, π).
 
     ω_j = atan2(y_{j1} − y_{j0}; x_{j1} − x_{j0})  mod  π
 
@@ -58,7 +58,7 @@ def _compute_orientations(onset, offset):
 def _point_to_segment_distances(points, onset, offset):
     """
     Minimal Euclidean distance d(p_i, s_j) from each reference point p_i to each
-    saccade segment s_j = [s_{j0}, s_{j1}] — Eq. (1).
+    saccade segment s_j = [s_{j0}, s_{j1}].
 
     Used internally by make_orientation_field; not part of the public API.
     """
@@ -78,7 +78,7 @@ def _point_to_segment_distances(points, onset, offset):
 
 def _gaussian_kernel(d, sigma):
     """
-    Gaussian kernel K(p_i, s_j) = exp(−½ (d / σ)²)  — Eq. (2).
+    Gaussian kernel K(p_i, s_j) = exp(−½ (d / σ)²).
 
     Used internally by make_orientation_field; not part of the public API.
     """
@@ -88,7 +88,7 @@ def _gaussian_kernel(d, sigma):
 
 def make_reference_grid(w, h, grid_resolution=200):
     """
-    Uniform reference grid of positions {p_i} ⊂ [1..W] × [1..H] — §3.1.
+    Uniform reference grid of positions {p_i} ⊂ [1..W] × [1..H].
 
     Parameters
     ----------
@@ -121,7 +121,7 @@ def make_orientation_field(points, onset, offset, sigma=50.0,
                            grid_shape=None,
                            points_per_chunk=4096, segs_per_chunk=512):
     """
-    Compute the orientation field (ω̄, R, ρ) over all reference points — Eqs. (2)–(4).
+    Compute the orientation field (ω̄, R, ρ) over all reference points.
 
     For each reference point p_i, accumulates:
       sin_i = Σ_j K(p_i,s_j) · sin(2ω_j)     (unnormalized; proportional to paper's s̄_i · m_i)
@@ -129,9 +129,9 @@ def make_orientation_field(points, onset, offset, sigma=50.0,
       m_i   = Σ_j K(p_i,s_j)                  (kernel mass)
 
     Then derives:
-      ω̄_i = ½ · (atan2(sin_i, cos_i) mod 2π) ∈ [0, π)   mean orientation, Eq. (3)
-      R_i  = √(sin_i² + cos_i²) / m_i          ∈ [0, 1]  coherence (MRL), Eq. (3)
-      ρ_i  = m_i / Σ_k m_k                     ∈ [0, 1]  density, Eq. (4)
+      ω̄_i = ½ · (atan2(sin_i, cos_i) mod 2π) ∈ [0, π)   mean orientation
+      R_i  = √(sin_i² + cos_i²) / m_i          ∈ [0, 1]  coherence (MRL)
+      ρ_i  = m_i / Σ_k m_k                     ∈ [0, 1]  density
 
     Points with no kernel support (m_i = 0) get ω̄_i = NaN, R_i = 0, ρ_i = 0.
 
@@ -140,7 +140,7 @@ def make_orientation_field(points, onset, offset, sigma=50.0,
     points           : (P, 2)  reference grid positions {p_i}
     onset            : (J, 2)  saccade starting points  {s_{j0}}
     offset           : (J, 2)  saccade end points       {s_{j1}}
-    sigma            : float   Gaussian bandwidth σ > 0, in pixels — Eq. (2)
+    sigma            : float   Gaussian bandwidth σ > 0, in pixels
     grid_shape       : (ny, nx) tuple — stored on the returned OrientationField for
                        convenient reshaping; pass yy.shape from make_reference_grid
     points_per_chunk : int     chunk size over grid points (memory/speed trade-off)

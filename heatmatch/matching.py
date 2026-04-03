@@ -4,13 +4,12 @@ from dataclasses import dataclass
 """
 HeatMatch Similarity
 
-Implements the similarity scores from §3.3 of the paper:
+Computes pairwise similarity scores between two saccade orientation fields.
 
-- Locational similarity S_loc — §3.3.1, Eq. (5): Pearson correlation of density
-  maps ρ, rescaled to [0, 1].
-- Directional similarity S_dir — §3.3.2, Eq. (6): density- and coherence-weighted
-  sum of per-point axial angular similarities, using geometric-mean overlap weights,
-  with a density-coherence trade-off parameter ∈ [0, 1] (§ Limitations).
+- Locational similarity S_loc: Pearson correlation of density maps ρ, rescaled to [0, 1].
+- Directional similarity S_dir: density- and coherence-weighted sum of per-point axial
+  angular similarities, using geometric-mean overlap weights, with a density-coherence
+  trade-off parameter ∈ [0, 1].
 
 Public API : compute_similarity, SimilarityResult
 Internal   : _locational_similarity, _directional_similarity
@@ -20,12 +19,12 @@ Internal   : _locational_similarity, _directional_similarity
 @dataclass
 class SimilarityResult:
     """
-    HeatMatch similarity scores between two saccade patterns — §3.3.
+    HeatMatch similarity scores between two saccade patterns.
 
     Attributes
     ----------
-    s_loc : float in [0, 1] — locational similarity S_loc, Eq. (5)
-    s_dir : float in [0, 1] — directional similarity S_dir, Eq. (6)
+    s_loc : float in [0, 1] — locational similarity S_loc
+    s_dir : float in [0, 1] — directional similarity S_dir
     """
     s_loc: float
     s_dir: float
@@ -33,7 +32,7 @@ class SimilarityResult:
 
 def _locational_similarity(rho_a, rho_b):
     """
-    S_loc(A, B) = (corr(ρ^A, ρ^B) + 1) / 2  ∈ [0, 1]  — Eq. (5).
+    S_loc(A, B) = (corr(ρ^A, ρ^B) + 1) / 2  ∈ [0, 1].
 
     Pearson correlation of the two density maps, shifted to [0, 1].
     S_loc = 1: identical spatial layout; S_loc = 0: maximally anti-correlated.
@@ -45,7 +44,7 @@ def _locational_similarity(rho_a, rho_b):
 def _directional_similarity(omega_a, omega_b, R_a, R_b, rho_a, rho_b,
                              density_coherence_tradeoff=0.5):
     """
-    S_dir(A, B) = Σ_i w_i · axial-sim(ω̄_i^A, ω̄_i^B) / Σ_i w_i  ∈ [0, 1]  — Eq. (6).
+    S_dir(A, B) = Σ_i w_i · axial-sim(ω̄_i^A, ω̄_i^B) / Σ_i w_i  ∈ [0, 1].
 
     where w_i = ρ̄_i^dct · R̄_i^(1−dct),  dct = density_coherence_tradeoff.
 
@@ -77,20 +76,20 @@ def _directional_similarity(omega_a, omega_b, R_a, R_b, rho_a, rho_b,
 
 def compute_similarity(field_a, field_b, density_coherence_tradeoff=0.5):
     """
-    Compute HeatMatch similarity between two saccade patterns — §3.3.
+    Compute HeatMatch similarity between two saccade patterns.
 
     Parameters
     ----------
     field_a, field_b : OrientationField
         Precomputed orientation fields from make_orientation_field.
     density_coherence_tradeoff : float in [0, 1]
-        Controls how much S_dir weights grid points by density vs. coherence (§ Limitations).
+        Controls how much S_dir weights grid points by density vs. coherence.
         At 1.0 the weight is purely density-based and angular coherence has no influence,
         making S_dir statistically redundant with S_loc. Recommended ~0.5.
 
     Returns
     -------
-    SimilarityResult with s_loc (Eq. 5) and s_dir (Eq. 6)
+    SimilarityResult with s_loc and s_dir
     """
     s_loc = _locational_similarity(field_a.rho, field_b.rho)
     s_dir = _directional_similarity(field_a.omega_mean, field_b.omega_mean,
