@@ -26,7 +26,7 @@ Xingyu Long, Jozsef Arato, Sophia Kury, Anna Miscena, and Raphael Rosenberg. 202
 2. **HeatMatch similarity** — comparison based on saccade density and orientation.
 
 ![HeatMatch heatmap example](assets/example_heatmaps.jpg)
-<sub>Per-participant (columns 1–5) and aggregated (column 6) heatmaps for four paintings. Hue = mean saccade orientation relative to OOI; opacity = local confidence. Stimulus images: public domain via [Wikimedia Commons](https://commons.wikimedia.org) — see paper for details.</sub>
+<sub>Per-participant (columns 1–5) and aggregated (column 6) heatmaps for three paintings. Hue = mean saccade orientation relative to OOI; opacity = local confidence. Stimulus images: public domain via [Wikimedia Commons](https://commons.wikimedia.org) — see paper for details.</sub>
 
 See the [paper](https://doi.org/10.1145/3803539) for methodology.
 

@@ -217,3 +217,5 @@ assets/IMG_*.png
 
 # Build artifacts
 heatmatch.egg-info/
+
+legacy/
